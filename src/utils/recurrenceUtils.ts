@@ -1,4 +1,4 @@
-import { addDays, addWeeks, addMonths, addYears, isBefore, isAfter, startOfDay } from 'date-fns';
+import { addDays, addWeeks, addMonths, addYears, startOfDay } from 'date-fns';
 
 type Frequency = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
@@ -7,10 +7,10 @@ interface RecurrenceOptions {
   endDate?: Date;
   frequency: Frequency;
   interval: number;
-  selectedWeekdays?: number[]; // 0 (Sunday) - 6 (Saturday)
+  selectedWeekdays?: number[];
   nthWeekday?: {
-    week: number;    // 1 = first, 2 = second, ..., -1 = last
-    weekday: number; // 0 (Sun) - 6 (Sat)
+    week: number;
+    weekday: number;
   };
 }
 
@@ -25,8 +25,7 @@ export function generateRecurringDates(options: RecurrenceOptions): Date[] {
   } = options;
 
   const result: Date[] = [];
-  const limit = endDate ?? addYears(startDate, 1); // 1-year default limit
-
+  const limit = endDate ?? addYears(startDate, 1);
   let current = startOfDay(startDate);
 
   switch (frequency) {
@@ -38,7 +37,6 @@ export function generateRecurringDates(options: RecurrenceOptions): Date[] {
       break;
 
     case 'weekly':
-      // Go week by week, adding selected weekdays
       while (current <= limit) {
         const weekStart = startOfDay(current);
         for (let i = 0; i < 7; i++) {
@@ -65,12 +63,7 @@ export function generateRecurringDates(options: RecurrenceOptions): Date[] {
 
     case 'yearly':
       while (current <= limit) {
-        if (nthWeekday) {
-          const date = getNthWeekdayOfYear(current, nthWeekday.week, nthWeekday.weekday);
-          if (date && date >= startDate && date <= limit) {
-            result.push(date);
-          }
-        }
+        result.push(new Date(current));
         current = addYears(current, interval);
       }
       break;
@@ -90,21 +83,11 @@ function getNthWeekdayOfMonth(baseDate: Date, week: number, weekday: number): Da
   let day = 1 + dayOffset + (week - 1) * 7;
 
   if (week === -1) {
-    // last weekday of the month
-    date = new Date(year, month + 1, 0); // last day of month
+    date = new Date(year, month + 1, 0);
     const lastDay = date.getDay();
     day = date.getDate() - ((lastDay - weekday + 7) % 7);
   }
 
   date = new Date(year, month, day);
   return date.getMonth() === month ? date : null;
-}
-
-function getNthWeekdayOfYear(baseDate: Date, week: number, weekday: number): Date | null {
-  const year = baseDate.getFullYear();
-  for (let m = 0; m < 12; m++) {
-    const date = getNthWeekdayOfMonth(new Date(year, m, 1), week, weekday);
-    if (date) return date;
-  }
-  return null;
 }

@@ -19,7 +19,7 @@ export default function CustomizationPanel() {
   } = useRecurrenceStore();
 
   const showWeekdays = frequency === 'weekly';
-  const showNthWeekday = frequency === 'monthly' || frequency === 'yearly';
+  const showNthWeekday = frequency === 'monthly';
 
   return (
     <div className="p-4 border rounded-xl shadow bg-white space-y-4">
@@ -62,28 +62,24 @@ export default function CustomizationPanel() {
           <div className="mt-2 flex items-center gap-4">
             <select
               value={nthWeekday?.week ?? ''}
-              onChange={(e) => setNthWeekday({ week: parseInt(e.target.value), weekday: nthWeekday?.weekday ?? 0 })}
+              onChange={(e) =>
+                setNthWeekday({ week: parseInt(e.target.value), weekday: nthWeekday?.weekday ?? 0 })
+              }
               className="border rounded px-2 py-1"
             >
               <option value="">Week</option>
               {weeks.map((w) => (
                 <option key={w} value={w}>
-                  {w === 1
-                    ? '1st'
-                    : w === 2
-                    ? '2nd'
-                    : w === 3
-                    ? '3rd'
-                    : w === 4
-                    ? '4th'
-                    : '5th'}
+                  {w === 1 ? '1st' : w === 2 ? '2nd' : w === 3 ? '3rd' : w === 4 ? '4th' : '5th'}
                 </option>
               ))}
             </select>
 
             <select
               value={nthWeekday?.weekday ?? ''}
-              onChange={(e) => setNthWeekday({ week: nthWeekday?.week ?? 1, weekday: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setNthWeekday({ week: nthWeekday?.week ?? 1, weekday: parseInt(e.target.value) })
+              }
               className="border rounded px-2 py-1"
             >
               <option value="">Weekday</option>

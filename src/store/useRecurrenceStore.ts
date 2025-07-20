@@ -4,8 +4,8 @@ import { generateRecurringDates } from '@/utils/recurrenceUtils';
 export type Frequency = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
 export interface NthWeekday {
-  week: number;      // 1 = First, 2 = Second, ..., -1 = Last
-  weekday: number;   // 0 = Sunday ... 6 = Saturday
+  week: number;
+  weekday: number;
 }
 
 interface RecurrenceState {
@@ -14,16 +14,11 @@ interface RecurrenceState {
   frequency: Frequency;
   interval: number;
 
-  // Weekly specific
   selectedWeekdays: number[];
-
-  // Monthly/Yearly specific
   nthWeekday?: NthWeekday;
 
-  // Computed Dates
   recurringDates: Date[];
 
-  // Actions
   setStartDate: (date: Date) => void;
   setEndDate: (date?: Date) => void;
   setFrequency: (f: Frequency) => void;
