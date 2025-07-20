@@ -5,7 +5,6 @@ import RecurrenceOptions from '@/components/RecurrenceOptions';
 import DatePicker from '@/components/DatePicker';
 import CalendarPreview from '@/components/CalendarPreview';
 import CustomizationPanel from '@/components/CustomizationPanel';
-import RecurrenceTags from '@/components/RecurrenceTags';
 
 export default function Home() {
   return (
@@ -14,7 +13,6 @@ export default function Home() {
       <DatePicker />
       <RecurrenceOptions />
       <CustomizationPanel />
-      <RecurrenceTags />
       <CalendarPreview />
     </div>
   );
