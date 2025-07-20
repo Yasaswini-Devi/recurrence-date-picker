@@ -3,47 +3,49 @@
 import { useRecurrenceStore } from '@/store/useRecurrenceStore';
 import Button from '@/components/ui/Button';
 
+const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const weeks = [1, 2, 3, 4, 5];
+
 export default function CustomizationPanel() {
   const {
+    frequency,
     interval,
     setInterval,
     selectedWeekdays,
     toggleWeekday,
-    generateDates,
     nthWeekday,
     setNthWeekday,
-    frequency,
+    generateDates
   } = useRecurrenceStore();
 
-  const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-  const weekOptions = [1, 2, 3, 4, 5];
-  const weekdayOptions = weekdays.map((day, i) => ({ label: day, value: i }));
+  const showWeekdays = frequency === 'weekly';
+  const showNthWeekday = frequency === 'monthly' || frequency === 'yearly';
 
   return (
-    <div className="space-y-4 p-4 bg-white shadow rounded-xl border border-gray-200">
+    <div className="p-4 border rounded-xl shadow bg-white space-y-4">
       <div>
-        <label className="block mb-1 font-medium">Interval</label>
+        <label className="font-medium">Repeat every</label>
         <input
           type="number"
           min={1}
           value={interval}
           onChange={(e) => setInterval(Number(e.target.value))}
-          className="border px-2 py-1 rounded w-20"
+          className="ml-2 w-20 border px-2 py-1 rounded"
         />
+        <span className="ml-2 text-sm text-gray-600">{frequency}</span>
       </div>
 
-      {(frequency === 'weekly' || frequency === 'monthly') && (
+      {showWeekdays && (
         <div>
-          <label className="block mb-1 font-medium">Select Days</label>
-          <div className="flex flex-wrap gap-2">
-            {weekdays.map((day, index) => (
+          <label className="font-medium">Select Days of the Week</label>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {weekdays.map((day, idx) => (
               <button
-                key={index}
-                onClick={() => toggleWeekday(index)}
-                className={`px-3 py-1 rounded-full border ${
-                  selectedWeekdays.includes(index)
-                    ? 'bg-blue-500 text-white'
+                key={idx}
+                onClick={() => toggleWeekday(idx)}
+                className={`px-3 py-1 border rounded-full ${
+                  selectedWeekdays.includes(idx)
+                    ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 text-gray-700'
                 }`}
               >
@@ -54,36 +56,40 @@ export default function CustomizationPanel() {
         </div>
       )}
 
-      {frequency === 'monthly' && (
-        <div className="space-y-2">
-          <label className="block font-medium">Or select pattern (e.g., 2nd Tuesday)</label>
-          <div className="flex gap-4">
+      {showNthWeekday && (
+        <div>
+          <label className="font-medium">Nth Weekday Pattern</label>
+          <div className="mt-2 flex items-center gap-4">
             <select
               value={nthWeekday?.week ?? ''}
-              onChange={(e) =>
-                setNthWeekday({ week: Number(e.target.value), weekday: nthWeekday?.weekday ?? 1 })
-              }
+              onChange={(e) => setNthWeekday({ week: parseInt(e.target.value), weekday: nthWeekday?.weekday ?? 0 })}
               className="border rounded px-2 py-1"
             >
               <option value="">Week</option>
-              {weekOptions.map((w) => (
+              {weeks.map((w) => (
                 <option key={w} value={w}>
-                  {w}
+                  {w === 1
+                    ? '1st'
+                    : w === 2
+                    ? '2nd'
+                    : w === 3
+                    ? '3rd'
+                    : w === 4
+                    ? '4th'
+                    : '5th'}
                 </option>
               ))}
             </select>
 
             <select
               value={nthWeekday?.weekday ?? ''}
-              onChange={(e) =>
-                setNthWeekday({ week: nthWeekday?.week ?? 1, weekday: Number(e.target.value) })
-              }
+              onChange={(e) => setNthWeekday({ week: nthWeekday?.week ?? 1, weekday: parseInt(e.target.value) })}
               className="border rounded px-2 py-1"
             >
-              <option value="">Day</option>
-              {weekdayOptions.map((day) => (
-                <option key={day.value} value={day.value}>
-                  {day.label}
+              <option value="">Weekday</option>
+              {weekdays.map((day, idx) => (
+                <option key={idx} value={idx}>
+                  {day}
                 </option>
               ))}
             </select>
@@ -91,9 +97,7 @@ export default function CustomizationPanel() {
         </div>
       )}
 
-      <Button onClick={generateDates} className="mt-4">
-        Apply
-      </Button>
+      <Button onClick={generateDates}>Apply</Button>
     </div>
   );
 }
