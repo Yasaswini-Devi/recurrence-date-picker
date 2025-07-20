@@ -82,7 +82,7 @@ function getNthWeekdayOfMonth(baseDate: Date, week: number, weekday: number): Da
   let date = new Date(year, month, 1);
   const firstDay = date.getDay();
 
-  let dayOffset = (weekday - firstDay + 7) % 7;
+  const dayOffset = (weekday - firstDay + 7) % 7;
   let day = 1 + dayOffset + (week - 1) * 7;
 
   if (week === -1) {
