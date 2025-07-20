@@ -51,6 +51,12 @@ export default function CalendarPreview() {
 
       {/* Calendar Days */}
       <div className="grid grid-cols-7 gap-2 mt-1 text-center">
+        {
+          // Add padding before the first day
+          Array(monthStart.getDay()).fill(null).map((_, i) => (
+            <div key={`empty-${i}`} />
+          ))
+        }
         {days.map((day) => {
           const isHighlighted = recurringDates.some((d) => isSameDay(d, day));
           return (
