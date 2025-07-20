@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { generateRecurringDates } from '@/utils/recurrenceUtils';
+import { generateRecurringDates } from '../utils/recurrenceUtils';
 
 export type Frequency = 'daily' | 'weekly' | 'monthly' | 'yearly';
 

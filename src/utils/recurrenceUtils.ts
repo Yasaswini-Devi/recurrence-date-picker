@@ -38,14 +38,17 @@ export function generateRecurringDates(options: RecurrenceOptions): Date[] {
 
     case 'weekly':
       while (current <= limit) {
-        const weekStart = startOfDay(current);
         for (let i = 0; i < 7; i++) {
-          const day = addDays(weekStart, i);
-          if (selectedWeekdays.includes(day.getDay()) && day >= startDate && day <= limit) {
+          const day = addDays(current, i); 
+          if (
+            selectedWeekdays.includes(day.getDay()) &&
+            day >= startDate &&
+            day <= limit
+          ) {
             result.push(new Date(day));
           }
         }
-        current = addWeeks(weekStart, interval);
+        current = addWeeks(current, interval);
       }
       break;
 
